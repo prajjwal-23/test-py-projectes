@@ -11,8 +11,13 @@ class handDetector():
         self.trackCon = trackCon
 
         self.mpHands = mp.solutions.hands
-        self.hands = self.mpHands.Hands(self.mode, self.maxHands,
-                                        self.detectionCon, self.trackCon)
+        self.hands = self.mpHands.Hands(
+            static_image_mode=self.mode,
+            max_num_hands=self.maxHands,
+            min_detection_confidence=self.detectionCon,
+            min_tracking_confidence=self.trackCon
+        )
+
         self.mpDraw = mp.solutions.drawing_utils
 
     def findHands(self, img, draw=True):
@@ -28,20 +33,36 @@ class handDetector():
         return img
 
     def findPosition(self, img, handNo=0, draw=True):
-
-        lmList = []
+        self.lmList = []
         if self.results.multi_hand_landmarks:
             myHand = self.results.multi_hand_landmarks[handNo]
             for id, lm in enumerate(myHand.landmark):
-                # print(id, lm)
                 h, w, c = img.shape
                 cx, cy = int(lm.x * w), int(lm.y * h)
-                # print(id, cx, cy)
-                lmList.append([id, cx, cy])
+                self.lmList.append([id, cx, cy])
                 if draw:
                     cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
 
-        return lmList
+        return self.lmList
+
+
+    def fingersup(self):
+        fingers = []
+        
+        # Thumb (based on x position instead of y)
+        if self.lmList[4][1] > self.lmList[3][1]:
+            fingers.append(1)
+        else:
+            fingers.append(0)
+
+        # Other four fingers
+        for id in [8, 12, 16, 20]:
+            if self.lmList[id][2] < self.lmList[id - 2][2]:
+                fingers.append(1)
+            else:
+                fingers.append(0)
+
+        return fingers
 
 
 def main():

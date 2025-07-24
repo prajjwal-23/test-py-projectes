@@ -50,11 +50,11 @@ while True:
         x2, y2 = lmlist[12][1:]
         # print(x1, y1)
         # 3. check which fingure are up
-        fingure = detector.finguresup()
+        fingers = detector.fingersup()
         # print(fingure)
 
         # 4. if selection mode - two fing are up 
-        if fingure[1] and fingure[2]:
+        if fingers[1] and fingers[2]:
             xp, yp = 0, 0
             print("Selection Mode")
             # checking for the click
@@ -74,7 +74,7 @@ while True:
             cv2.rectangle(img, (x1, y1-25), (x2, y2+25), drawColor, cv2.FILLED)
 
         # 5. if draw mode - index fingure is up
-        if fingure[1] and fingure[2] == False:
+        if fingers[1] and fingers[2] == False:
             cv2.circle(img, (x1, y1), 15, drawColor, cv2.FILLED)
             print("Drawing Mode")
 

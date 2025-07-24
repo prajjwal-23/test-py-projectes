@@ -1,2 +1,2 @@
 import pywhatkit
-pywhatkit.sendwhatmsg('+919453972882', 'Hii mamma', 22, 14)
+pywhatkit.sendwhatmsg('+919999999', 'Hii__', 22, 14)
